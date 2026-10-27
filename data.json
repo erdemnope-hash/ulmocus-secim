@@ -1,5 +1,5 @@
 {
-  "updatedAt": "21:18",
+  "updatedAt": "21:24",
   "phase": "voting",
   "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
   "totalBoxes": 12018,
@@ -17,7 +17,19 @@
     ],
     "cities": [
       { "name": "Cezaevleri", "pct": 88.7, "time": "20:00 kapanış" },
-      { "name": "Rahat", "pct": 72, "time": "18:45" },
+      { "name": "Rahat", "pct": 72.2, "time": "18:00" },
+      { "name": "Rehasim", "pct": 75.4, "time": "18:00" },
+      { "name": "Modiin", "pct": 70.1, "time": "18:00" },
+      { "name": "Petah Tikva", "pct": 63.1, "time": "18:00" },
+      { "name": "Rişon LeZion", "pct": 61.3, "time": "18:00" },
+      { "name": "Aşdod", "pct": 59.4, "time": "18:00" },
+      { "name": "Tel Aviv-Yafa", "pct": 58.6, "time": "18:00" },
+      { "name": "Holon", "pct": 58, "time": "18:00" },
+      { "name": "Beerşeba", "pct": 55.8, "time": "18:00" },
+      { "name": "Kudüs", "pct": 55.3, "time": "18:00" },
+      { "name": "Hayfa", "pct": 54.5, "time": "18:00" },
+      { "name": "Netanya", "pct": 50.6, "time": "18:00" },
+      { "name": "Eilat", "pct": 34, "time": "18:00" },
       { "name": "Elkana", "pct": 72 },
       { "name": "Elad", "pct": 71 },
       { "name": "Karnei Shomron", "pct": 71 },
@@ -45,6 +57,6 @@
     ]
   },
   "sources": [
-    { "label": "Merkez Seçim Kurulu açıklamaları (Ynet, Walla, Mako/N12, Davar, Israel National News, Times of Israel aracılığıyla)", "url": "https://www.israelnationalnews.com/news/435215" }
+    { "label": "Merkez Seçim Kurulu açıklamaları (Ynet, Walla, Mako/N12, Davar, Israel National News, Times of Israel aracılığıyla). Not: Tel Aviv belediyesi kendi hesabıyla şehirde katılımı %65,3 olarak açıkladı; burada kurulun rakamı kullanıldı", "url": "https://www.israelnationalnews.com/news/435215" }
   ]
 }

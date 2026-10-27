@@ -974,8 +974,10 @@ function loadCSV(text, fileName, opts = {}) {
     loc: find("שם ישוב", "שם יישוב"), box: find("קלפי"), reg: find("בזב"),
     voted: find("מצביעים"), invalid: find("פסולים"), valid: find("כשרים"),
     nboxes: find("מספר קלפיות"),
+    // Kurul/Kaplan dönüştürücüsünün ek sütunları: mıntıka kodu, Latin harfli ad, toplam sandık ve toplam seçmen
+    dist: find("מחוז"), en: find("שם אנגלית"), tboxes: find("סה״כ קלפיות"), treg: find("סה״כ בזב"),
   };
-  const missing = Object.entries(col).filter(([k, v]) => v < 0 && k !== "box" && k !== "nboxes").map(([k]) => k);
+  const missing = ["loc", "reg", "voted", "invalid", "valid"].filter((k) => col[k] < 0);
   if (missing.length) throw new Error("Beklenen sütunlar bulunamadı. Dosyadaki başlıklar: " + H.slice(0, 14).join(", "));
 
   const partyCols = H.map((h, i) => [h, i]).filter(([h, i]) => i > col.valid && h && i !== col.nboxes);
@@ -1002,24 +1004,34 @@ function loadCSV(text, fileName, opts = {}) {
     if (!locName) continue;
     const key = norm(locName);
     const hit = idx[key];
-    const st = stByCode[hit ? hit.code : "?"];
+    const st = (col.dist >= 0 && stByCode[r[col.dist]]) || stByCode[hit ? hit.code : "?"];
     let c = cityMap[key];
     if (!c) {
-      if (!hit) unmatched++;
-      c = cityMap[key] = { name: hit && hit.tr ? hit.tr : locName, he: locName, code: locName, envelope: st.code === "ÇZ",
+      if (st.code === "?") unmatched++;
+      const enName = col.en >= 0 ? (r[col.en] || "").trim() : "";
+      c = cityMap[key] = { name: hit && hit.tr ? hit.tr : enName || locName, he: locName, code: locName, envelope: st.code === "ÇZ",
         reg: 0, boxes: 0, opened: 0, regOpened: 0, voted: 0, invalid: 0, votes: P.map(() => 0) };
       st.cities.push(c);
     }
     const reg = num(r, col.reg), voted = num(r, col.voted), invalid = num(r, col.invalid);
     const v = partyCols.map(([, i]) => num(r, i));
-    c.opened += col.nboxes >= 0 ? num(r, col.nboxes) : 1; c.reg += reg; c.regOpened += reg; c.voted += voted; c.invalid += invalid;
+    c.opened += col.nboxes >= 0 ? num(r, col.nboxes) : 1; c.regOpened += reg; c.voted += voted; c.invalid += invalid;
+    c.reg += col.treg >= 0 ? num(r, col.treg) : reg;
+    if (col.tboxes >= 0) c.boxes += num(r, col.tboxes);
     v.forEach((x, i) => (c.votes[i] += x));
-    feed.push({ no: col.box >= 0 ? r[col.box] : c.opened, st, c, reg, voted, invalid, v, time: "dosya", fresh: false });
+    if (voted > 0) feed.push({ no: col.box >= 0 ? r[col.box] : c.opened, st, c, reg, voted, invalid, v, time: "dosya", fresh: false });
   }
-  // CSV yalnızca sayılan sandıkları içerir; toplam sandık sayısı bilinmediği için ilerleme yüzdesi gösterilmez
-  states.forEach((s) => s.cities.forEach((c) => { c.boxes = 0; if (c.envelope) c.reg = c.regOpened = 0; }));
+  // Toplam sandık sütunu yoksa CSV yalnızca sayılan sandıkları içerir; ilerleme yüzdesi gösterilmez
+  states.forEach((s) => s.cities.forEach((c) => { if (col.tboxes < 0) c.boxes = 0; if (c.envelope) c.reg = c.regOpened = 0; }));
+  // Son turda yeni sandık bildiren yerleşimler akışın başına
+  let feedOut = feed.slice(-40).reverse();
+  if (opts.recent && opts.recent.length) {
+    const order = new Map(opts.recent.map((n, i) => [norm(n), i]));
+    feedOut = feed.filter((b) => order.has(norm(b.c.he))).sort((a, b) => order.get(norm(a.c.he)) - order.get(norm(b.c.he)))
+      .map((b) => ({ ...b, time: opts.loadedAt || "", no: b.c.opened, fresh: true })).slice(0, 40);
+  }
   mode = opts.mode || "csv"; clearTimeout(timer);
-  S = { states: states.filter((s) => s.cities.length || s.code !== "?"), feed: feed.slice(-40).reverse(), phase: mode,
+  S = { states: states.filter((s) => s.cities.length || s.code !== "?"), feed: feedOut, phase: mode,
     fileName, totalBoxes: opts.totalBoxes || 0,
     loadedAt: opts.loadedAt || new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }) };
   if (selected !== null && selected >= S.states.length) selected = null;
@@ -1111,7 +1123,7 @@ async function loadLive() {
     try {
       const r = await fetch(LIVE.results.file + "?t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
-      loadCSV(await r.text(), LIVE.results.file, { mode: "live", letters: LIVE.letters, loadedAt: LIVE.updatedAt, totalBoxes: LIVE.totalBoxes });
+      loadCSV(await r.text(), LIVE.results.file, { mode: "live", letters: LIVE.letters, loadedAt: LIVE.updatedAt, totalBoxes: LIVE.totalBoxes, recent: LIVE.results.recent });
       return;
     } catch (e) { /* sonuç dosyası okunamazsa katılım ekranında kal */ }
   }
@@ -1132,7 +1144,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "c7d9ac4159";
+const BUILD = "3306d268a9";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

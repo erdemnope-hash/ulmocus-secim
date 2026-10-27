@@ -304,7 +304,6 @@ textarea { width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid
     <button class="btn" id="toggle-sim">Simülasyonu göster</button>
   </div>
 
-
   <section class="panel summary" aria-label="Ülke geneli">
     <div class="sum-grid">
       <div class="sum-col">
@@ -339,28 +338,6 @@ textarea { width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid
     </div>
   </section>
 
-  <section class="panel" id="turnout-panel" aria-label="Katılım" hidden>
-    <div class="panel-h"><h2>Katılım</h2><span class="hint" id="to-src"></span></div>
-    <div class="to-grid">
-      <div class="to-col">
-        <div class="stat">
-          <div class="label" id="to-last-label">Son açıklanan katılım</div>
-          <div class="value num" id="to-last">—</div>
-          <div class="sub" id="to-last-sub"></div>
-        </div>
-        <div class="to-bars" id="to-hours"></div>
-      </div>
-      <div class="to-col">
-        <div class="eyebrow">Yerleşimlere göre katılım</div>
-        <div class="to-bars" id="to-cities"></div>
-      </div>
-      <div class="to-col">
-        <div class="eyebrow">Kullanılan oy · en büyük şehirler</div>
-        <div class="to-bars" id="to-voters"></div>
-      </div>
-    </div>
-  </section>
-
   <div class="main">
     <section class="panel" aria-label="Mıntıka haritası">
       <div class="panel-h"><h2>Mıntıkalar</h2><span class="hint">Renk: önde giden liste · koyuluk: sayılan sandık oranı</span></div>
@@ -387,6 +364,28 @@ textarea { width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid
   <section class="panel" aria-label="Son sayılan sandıklar">
     <div class="panel-h"><h2>Son sayılan sandıklar</h2><span class="hint">Her sandık (קלפי) sayıldığı anda şehir, mıntıka ve ülke toplamına eklenir</span></div>
     <ul class="feed" id="feed"></ul>
+  </section>
+
+  <section class="panel" id="turnout-panel" aria-label="Katılım" hidden>
+    <div class="panel-h"><h2>Katılım</h2><span class="hint" id="to-src"></span></div>
+    <div class="to-grid">
+      <div class="to-col">
+        <div class="stat">
+          <div class="label" id="to-last-label">Son açıklanan katılım</div>
+          <div class="value num" id="to-last">—</div>
+          <div class="sub" id="to-last-sub"></div>
+        </div>
+        <div class="to-bars" id="to-hours"></div>
+      </div>
+      <div class="to-col">
+        <div class="eyebrow">Yerleşimlere göre katılım</div>
+        <div class="to-bars" id="to-cities"></div>
+      </div>
+      <div class="to-col">
+        <div class="eyebrow">Kullanılan oy · en büyük şehirler</div>
+        <div class="to-bars" id="to-voters"></div>
+      </div>
+    </div>
   </section>
 
   <details class="panel src" id="src">
@@ -1099,7 +1098,7 @@ async function loadLive() {
   showEmptyLive();
 }
 
-const BUILD = "272edcf53b";
+const BUILD = "be7fd2645d";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

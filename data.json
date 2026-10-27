@@ -1,5 +1,5 @@
 {
-  "updatedAt": "21:29",
+  "updatedAt": "21:43",
   "phase": "voting",
   "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
   "totalBoxes": 12018,
@@ -20,7 +20,8 @@
       {
         "time": "14:00",
         "pct": 44.9,
-        "voters": 3290480
+        "voters": 3290480,
+        "prev": 38.9
       },
       {
         "time": "16:00",

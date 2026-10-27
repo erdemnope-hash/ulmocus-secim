@@ -169,6 +169,16 @@ h1 .he { font-size: .55em; font-weight: 500; color: var(--muted); margin-left: 1
 #hemi .maj-line { stroke: var(--fg); stroke-width: 1.2; stroke-dasharray: 3 3; }
 #hemi .big { font: 700 34px var(--font-display); fill: var(--fg); }
 #hemi .small { font: 500 11px var(--font-body); fill: var(--muted); letter-spacing: .04em; }
+.hemi-box { position: relative; }
+#hemi circle.seat { cursor: pointer; transition: opacity .15s ease; }
+#hemi.hl circle.seat { opacity: .25; }
+#hemi.hl circle.seat.on { opacity: 1; stroke: var(--fg); stroke-width: 1.2; }
+.hemi-tip {
+  position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, calc(-100% - 10px));
+  background: var(--fg); color: var(--bg); padding: 6px 10px; border-radius: 6px; font-size: 12px; line-height: 1.35;
+  white-space: nowrap; box-shadow: 0 4px 14px rgb(0 0 0 / .18);
+}
+.hemi-tip b { display: block; font-size: 13px; }
 .hemi-blocs { display: grid; gap: 8px; }
 .hb { display: grid; grid-template-columns: minmax(0, 1fr) 40px; gap: 4px 10px; align-items: center; }
 .hb .n { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 8px; }
@@ -337,7 +347,10 @@ textarea { width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid
       </div>
       <div class="sum-col">
         <div class="eyebrow sum-h"><span>Knesset dağılımı</span><span id="hemi-hint">120 sandalye · çoğunluk 61</span></div>
-        <svg id="hemi" viewBox="0 0 400 214" role="img" aria-label="Knesset sandalye dağılımı"></svg>
+        <div class="hemi-box">
+          <svg id="hemi" viewBox="0 0 400 214" role="img" aria-label="Knesset sandalye dağılımı"></svg>
+          <div class="hemi-tip" id="hemi-tip" hidden></div>
+        </div>
         <div class="hemi-blocs" id="hemi-blocs"></div>
         <div class="foot" id="seat-note"></div>
       </div>
@@ -799,7 +812,7 @@ function renderSummary() {
 
   const gov = P.reduce((a, p, i) => a + (p.bloc === "gov" ? seats[i] : 0), 0);
   $("seat-note").textContent = all.valid && P.some((p) => p.bloc === "gov") ? (gov >= 61 ? "Mevcut sayıma göre hükümet bloğu 61'e ulaşıyor." : `Mevcut sayıma göre hükümet bloğu 61'e ${61 - gov} sandalye uzak.`) : "";
-  renderHemi(seats, all.valid > 0);
+  renderHemi(seats, all.valid > 0, all.share);
 
   $("st-boxes-pct").textContent = all.progress === null ? "—" : pct(all.progress);
   $("st-boxes").textContent = all.boxes ? `${fmt(all.opened)} / ${fmt(all.boxes)}` : `${fmt(all.opened)} sandık sayıldı`;
@@ -827,17 +840,22 @@ const HEMI_SEATS = (() => {
 })();
 const HEMI_ORDER = ["arab", "opp", "other", "unmapped", "gov"];
 
-function renderHemi(seats, valid) {
+let HEMI_STATE = { seats: [], share: [] };
+function renderHemi(seats, valid, share = []) {
+  HEMI_STATE = { seats, share };
   const bloc = (p) => HEMI_ORDER.includes(p.bloc) ? p.bloc : "unmapped";
   const order = P.map((p, i) => i).filter((i) => seats[i] > 0)
     .sort((a, b) => HEMI_ORDER.indexOf(bloc(P[a])) - HEMI_ORDER.indexOf(bloc(P[b])) || seats[b] - seats[a]);
-  const colors = [];
-  order.forEach((i) => { for (let k = 0; k < seats[i]; k++) colors.push(P[i].color); });
+  const owner = [];
+  order.forEach((i) => { for (let k = 0; k < seats[i]; k++) owner.push(i); });
   const bs = {};
   P.forEach((p, i) => (bs[bloc(p)] = (bs[bloc(p)] || 0) + seats[i]));
   const gov = bs.gov || 0;
-  $("hemi").innerHTML = HEMI_SEATS.map((s, k) =>
-    `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="7.4" fill="${colors[k] || "var(--line)"}"></circle>`).join("") +
+  // Her koltuğun üstüne gelince listenin adı, sandalye sayısı ve oy oranı görünür
+  $("hemi").innerHTML = HEMI_SEATS.map((s, k) => {
+    const i = owner[k];
+    return `<circle class="seat" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="7.4" fill="${i === undefined ? "var(--line)" : P[i].color}" data-p="${i === undefined ? "" : i}"></circle>`;
+  }).join("") +
     `<line class="maj-line" x1="200" y1="114" x2="200" y2="2"></line>` +
     (valid
       ? `<text class="big" x="200" y="178" text-anchor="middle">${gov}</text><text class="small" x="200" y="198" text-anchor="middle">HÜKÜMET BLOĞU</text>`
@@ -1119,6 +1137,25 @@ document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("clic
 }));
 $("pause").addEventListener("click", () => { paused = !paused; renderStatus(); });
 $("reset").addEventListener("click", () => startSim(0));
+// Meclis koltukları: üstüne gelince (dokunmatikte dokununca) listenin adı, sandalyesi ve oy oranı; aynı listenin koltukları vurgulanır
+function seatTip(e) {
+  const c = e.target.closest && e.target.closest("circle.seat");
+  const svg = $("hemi"), tip = $("hemi-tip");
+  if (!c || c.getAttribute("data-p") === "") { svg.classList.remove("hl"); tip.hidden = true; return; }
+  const i = +c.getAttribute("data-p");
+  svg.classList.add("hl");
+  svg.querySelectorAll("circle.seat").forEach((s) => s.classList.toggle("on", s.getAttribute("data-p") === String(i)));
+  const box = svg.parentNode.getBoundingClientRect(), r = c.getBoundingClientRect();
+  const sh = HEMI_STATE.share[i];
+  tip.innerHTML = `<b>${esc(P[i].name)}</b>${HEMI_STATE.seats[i]} sandalye${sh ? " · oyların " + pct(sh) : ""}`;
+  tip.style.left = Math.min(Math.max(r.left + r.width / 2 - box.left, 70), box.width - 70) + "px";
+  tip.style.top = r.top - box.top + "px";
+  tip.hidden = false;
+}
+$("hemi").addEventListener("mouseover", seatTip);
+$("hemi").addEventListener("click", seatTip);
+$("hemi").addEventListener("mouseleave", () => { $("hemi").classList.remove("hl"); $("hemi-tip").hidden = true; });
+
 function pickDistrict(e) {
   const t = e.target.closest("[data-i]"); if (!t) return;
   const i = +t.getAttribute("data-i"); selected = selected === i ? null : i; renderMap(); renderTable();
@@ -1193,7 +1230,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "75dc7ad96a";
+const BUILD = "202286122d";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

@@ -708,7 +708,7 @@ function renderStatus() {
     mode === "csv" ? `<b>Gerçek sonuçlar gösteriliyor:</b> ${esc(S.fileName)} dosyası ${S.loadedAt}'de elle yüklendi.`
     : mode === "live" ? (counted
         ? `<b>Gerçek sonuçlar:</b> Merkez Seçim Kurulu verisi, en son ${esc(S.loadedAt)} (İsrail saati) itibarıyla. Sayfa birkaç dakikada bir güncellenir; sayım bitene kadar sonuçlar gayriresmidir.`
-        : `<b>Henüz sayılmış oy yok.</b> Sandıklar 22:00'de kapanıyor (İsrail saati); aşağıdaki katılım rakamları Merkez Seçim Kurulu'nun açıkladığı gerçek verilerdir. Sayım başlayınca sonuçlar birkaç dakikada bir buraya eklenecek.`)
+        : LIVE.note ? LIVE.note : `<b>Henüz sayılmış oy yok.</b> Sandıklar 22:00'de kapanıyor (İsrail saati); aşağıdaki katılım rakamları Merkez Seçim Kurulu'nun açıkladığı gerçek verilerdir. Sayım başlayınca sonuçlar birkaç dakikada bir buraya eklenecek.`)
     : `<b>Bu ekran gerçek sonuç göstermiyor.</b> Sayılar, 21–23 Ekim anketlerinin ortalamasından üretilen bir sayım simülasyonudur.`;
 }
 
@@ -1098,7 +1098,7 @@ async function loadLive() {
   showEmptyLive();
 }
 
-const BUILD = "3f6537e61e";
+const BUILD = "e017ec44e0";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

@@ -42,30 +42,30 @@
       },
       {
         "name": "Kanal 12",
-        "time": "22:01",
+        "time": "22:45 güncel",
         "seats": {
           "likud": 24,
           "yashar": 22,
           "together": 12,
-          "dems": 9,
+          "dems": 10,
           "joint": 11,
           "otzma": 6,
           "utj": 6,
           "shas": 8,
-          "yb": 9,
+          "yb": 8,
           "rzp": 6,
           "raam": 7
         }
       },
       {
         "name": "Kanal 13",
-        "time": "22:01",
+        "time": "22:49 güncel",
         "seats": {
           "likud": 25,
           "yashar": 23,
-          "together": 14,
+          "together": 13,
           "dems": 9,
-          "joint": 10,
+          "joint": 11,
           "otzma": 6,
           "utj": 7,
           "shas": 6,

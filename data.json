@@ -1,5 +1,5 @@
 {
-  "updatedAt": "21:24",
+  "updatedAt": "21:29",
   "phase": "voting",
   "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
   "totalBoxes": 12018,
@@ -30,6 +30,8 @@
       { "name": "Hayfa", "pct": 54.5, "time": "18:00" },
       { "name": "Netanya", "pct": 50.6, "time": "18:00" },
       { "name": "Eilat", "pct": 34, "time": "18:00" },
+      { "name": "Tamra", "pct": 69, "time": "18:00" },
+      { "name": "Kafr Kasım", "pct": 63, "time": "18:00" },
       { "name": "Elkana", "pct": 72 },
       { "name": "Elad", "pct": 71 },
       { "name": "Karnei Shomron", "pct": 71 },

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="İsrail 26. Knesset seçimi (27 Ekim 2026): mıntıka ve şehir bazında canlı sandık sonuçları, katılım ve sandalye dağılımı.">
+<meta http-equiv="Cache-Control" content="no-cache">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Ulmocus Seçim · Knesset 2026</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1077,6 +1078,8 @@ async function loadLive() {
   } catch (e) {
     LIVE = null;
   }
+  // Bağımsız sitede sayfa tasarımı değiştiyse (yeni build) sayfayı kendiliğinden yenile
+  if (BUILD && LIVE && LIVE.build && LIVE.build !== BUILD) { location.reload(); return; }
   if (wantSim || mode === "csv") { if (mode === "sim") renderStatus(); renderTurnout(); return; }
   if (!LIVE) { startSim(); return; }
   renderTurnout();
@@ -1091,6 +1094,7 @@ async function loadLive() {
   showEmptyLive();
 }
 
+const BUILD = "87d2da5a71";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

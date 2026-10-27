@@ -1,5 +1,5 @@
 {
-  "updatedAt": "21:10",
+  "updatedAt": "21:18",
   "phase": "voting",
   "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
   "totalBoxes": 12018,
@@ -8,8 +8,9 @@
   "turnout": {
     "eligible": 7331981,
     "hourly": [
+      { "time": "10:00", "pct": 16.68, "prev": 15.9 },
       { "time": "12:00", "pct": 31.5 },
-      { "time": "14:00", "pct": 44.9 },
+      { "time": "14:00", "pct": 44.9, "voters": 3290480 },
       { "time": "16:00", "pct": 55.7, "voters": 4085075, "prev": 47.5 },
       { "time": "18:00", "pct": 66.7, "voters": 4892106, "prev": 57.7 },
       { "time": "20:00", "pct": 74.3, "voters": 5449277, "prev": 66.3 }
@@ -44,6 +45,6 @@
     ]
   },
   "sources": [
-    { "label": "Merkez Seçim Kurulu açıklamaları (Israel National News, Times of Israel, NBC News, Ynet, Walla aracılığıyla)", "url": "https://www.israelnationalnews.com/news/435215" }
+    { "label": "Merkez Seçim Kurulu açıklamaları (Ynet, Walla, Mako/N12, Davar, Israel National News, Times of Israel aracılığıyla)", "url": "https://www.israelnationalnews.com/news/435215" }
   ]
 }

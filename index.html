@@ -1079,7 +1079,12 @@ async function loadLive() {
     LIVE = null;
   }
   // Bağımsız sitede sayfa tasarımı değiştiyse (yeni build) sayfayı kendiliğinden yenile
-  if (BUILD && LIVE && LIVE.build && LIVE.build !== BUILD) { location.reload(); return; }
+  // (?v= önbelleği atlatır; aynı build için en fazla bir kez denenir, döngüye girmez)
+  if (BUILD && LIVE && LIVE.build && LIVE.build !== BUILD) {
+    let tried = null;
+    try { tried = sessionStorage.getItem("reloadFor"); sessionStorage.setItem("reloadFor", LIVE.build); } catch (e) {}
+    if (tried !== LIVE.build) { location.replace(location.pathname + "?v=" + LIVE.build); return; }
+  }
   if (wantSim || mode === "csv") { if (mode === "sim") renderStatus(); renderTurnout(); return; }
   if (!LIVE) { startSim(); return; }
   renderTurnout();
@@ -1094,7 +1099,7 @@ async function loadLive() {
   showEmptyLive();
 }
 
-const BUILD = "87d2da5a71";
+const BUILD = "69a75c4ec2";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

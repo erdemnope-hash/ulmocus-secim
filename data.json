@@ -20,6 +20,97 @@
     "ך": "amcha"
   },
   "national": null,
+  "exitPolls": {
+    "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",
+    "channels": [
+      {
+        "name": "Kan 11",
+        "time": "22:02",
+        "seats": {
+          "likud": 25,
+          "yashar": 21,
+          "together": 14,
+          "dems": 10,
+          "joint": 10,
+          "otzma": 7,
+          "utj": 6,
+          "shas": 6,
+          "yb": 8,
+          "rzp": 6,
+          "raam": 7
+        }
+      },
+      {
+        "name": "Kanal 12",
+        "time": "22:01",
+        "seats": {
+          "likud": 24,
+          "yashar": 22,
+          "together": 12,
+          "dems": 9,
+          "joint": 11,
+          "otzma": 6,
+          "utj": 6,
+          "shas": 8,
+          "yb": 9,
+          "rzp": 6,
+          "raam": 7
+        }
+      },
+      {
+        "name": "Kanal 13",
+        "time": "22:01",
+        "seats": {
+          "likud": 25,
+          "yashar": 23,
+          "together": 14,
+          "dems": 9,
+          "joint": 10,
+          "otzma": 6,
+          "utj": 7,
+          "shas": 6,
+          "yb": 7,
+          "rzp": 6,
+          "raam": 7
+        }
+      },
+      {
+        "name": "Kanal 14",
+        "time": "22:05",
+        "note": "Haaretz kanal adını vermedi; hükümet bloğu 60 rakamı Kanal 14'e atfedildi",
+        "seats": {
+          "likud": 30,
+          "yashar": 19,
+          "together": 11,
+          "dems": 9,
+          "joint": 10,
+          "otzma": 7,
+          "utj": 7,
+          "shas": 9,
+          "yb": 4,
+          "rzp": 7,
+          "raam": 7
+        }
+      },
+      {
+        "name": "i24NEWS",
+        "time": "22:03",
+        "seats": {
+          "likud": 27,
+          "yashar": 20,
+          "together": 15,
+          "dems": 9,
+          "joint": 9,
+          "otzma": 7,
+          "utj": 7,
+          "shas": 8,
+          "yb": 5,
+          "rzp": 6,
+          "raam": 7
+        }
+      }
+    ]
+  },
   "results": null,
   "turnout": {
     "eligible": 7331981,
@@ -249,5 +340,5 @@
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],
-  "build": "3306d268a9"
+  "build": "75dc7ad96a"
 }

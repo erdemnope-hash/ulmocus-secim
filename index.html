@@ -177,6 +177,20 @@ h1 .he { font-size: .55em; font-weight: 500; color: var(--muted); margin-left: 1
 .hb .track { grid-column: 1 / -1; position: relative; height: 6px; background: var(--surface-2); border-radius: 3px; }
 .hb .track i { position: absolute; inset: 0 auto 0 0; background: var(--c); border-radius: 3px; transition: width .5s ease; }
 .hb .track b { position: absolute; left: calc(61 / 120 * 100%); top: -3px; bottom: -3px; width: 2px; background: var(--fg); }
+.exitp { border-style: dashed; border-color: var(--warn); }
+.warn-chip { display: inline-flex; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--warn); color: var(--warn); font: 600 12px/1.3 var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
+.exit-note { margin: 0; padding: 12px 18px 4px; color: var(--muted); max-width: 90ch; }
+.exit-tbl { min-width: 560px; }
+.exit-tbl th.ch { text-align: right; }
+.exit-tbl th.ch small { display: block; font: 400 11px var(--font-mono); color: var(--muted); text-transform: none; letter-spacing: 0; }
+.exit-tbl td.v { text-align: right; font: 600 16px/1 var(--font-display); }
+.exit-tbl td.v.zero { color: var(--muted); font-weight: 500; }
+.exit-tbl tr.bloc td { background: var(--surface-2); font-weight: 600; }
+.exit-tbl tr.bloc td.v { font-size: 18px; }
+.exit-tbl tr.bloc td.v.maj { color: var(--ok); }
+.exit-tbl .pn { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.exit-tbl .pn i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); }
+.exit-src { padding: 4px 18px 14px; }
 .mapwrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 14px; padding: 16px 18px; align-items: start; }
 #map { width: 100%; max-width: 100%; max-height: 560px; display: block; }
 #map path { fill: color-mix(in srgb, var(--c) var(--mix), var(--surface-2)); stroke: var(--surface); stroke-width: 1.2; stroke-linejoin: round; cursor: pointer; transition: fill .5s ease; }
@@ -303,6 +317,16 @@ textarea { width: 100%; min-height: 150px; padding: 10px 12px; border: 1px solid
     <p id="banner-text"></p>
     <button class="btn" id="toggle-sim">Simülasyonu göster</button>
   </div>
+
+  <section class="panel exitp" id="exit-panel" aria-label="Çıkış anketleri" hidden>
+    <div class="panel-h">
+      <h2>Çıkış anketleri</h2>
+      <span class="warn-chip">Çıkış anketi · gerçek sonuç değil</span>
+    </div>
+    <p class="exit-note">Televizyon kanallarının sandık çıkışında seçmenlere sorarak yaptığı tahminler (<span class="he" lang="he">מדגם</span>). Merkez Seçim Kurulu'nun sayım sonucu değildir; kanallar arasında birkaç sandalye fark olabilir ve baraja yakın listeler yüzünden son sandalyeler sıkça değişir.</p>
+    <div class="tbl-wrap"><table class="exit-tbl" id="exit-tbl"></table></div>
+    <p class="foot exit-src" id="exit-src"></p>
+  </section>
 
   <section class="panel summary" aria-label="Ülke geneli">
     <div class="sum-grid">
@@ -908,7 +932,32 @@ function renderFeed() {
   S.feed.forEach((b) => (b.fresh = false));
 }
 
-function render() { renderStatus(); renderSummary(); renderMap(); renderTable(); renderFeed(); }
+// Kanalların çıkış anketleri: sayım sonucu gelene kadar üstte, gelince katılım bölümünün üstüne (aşağı) iner
+function renderExit() {
+  const panel = $("exit-panel");
+  const E = mode !== "sim" && LIVE && LIVE.exitPolls;
+  panel.hidden = !E;
+  if (!E) return;
+  const counted = S && (S.national || S.states.some((s) => s.cities.some((c) => c.voted > 0)));
+  const anchor = counted ? $("turnout-panel") : document.querySelector(".panel.summary");
+  if (anchor && panel.nextElementSibling !== anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor);
+  const ch = E.channels;
+  const ids = SIM_PARTIES.map((p) => p.id).filter((id) => ch.some((c) => id in c.seats));
+  const avg = (id) => ch.reduce((a, c) => a + (c.seats[id] || 0), 0) / ch.length;
+  ids.sort((a, b) => avg(b) - avg(a));
+  const byId = Object.fromEntries(SIM_PARTIES.map((p) => [p.id, p]));
+  const blocSum = (c, b) => Object.entries(c.seats).reduce((a, [id, n]) => a + (byId[id] && byId[id].bloc === b ? n : 0), 0);
+  const cell = (n, cls = "") => `<td class="v ${n ? "" : "zero"} ${cls}">${n || "–"}</td>`;
+  $("exit-tbl").innerHTML =
+    `<thead><tr><th>Liste</th>${ch.map((c) => `<th class="ch">${esc(c.name)}${c.note ? "*" : ""}<small>${esc(c.time)}</small></th>`).join("")}</tr></thead><tbody>` +
+    ids.map((id) => `<tr><td><span class="pn" style="--c:${byId[id].color}"><i></i>${esc(byId[id].name)}</span></td>${ch.map((c) => cell(c.seats[id] || 0)).join("")}</tr>`).join("") +
+    [["gov", "Hükümet bloğu"], ["opp", "Muhalefet (Arap partileri hariç)"], ["arab", "Arap partileri"]].map(([b, label]) =>
+      `<tr class="bloc"><td>${label}</td>${ch.map((c) => { const n = blocSum(c, b); return cell(n, b === "gov" && n >= 61 ? "maj" : ""); }).join("")}</tr>`).join("") +
+    `</tbody>`;
+  $("exit-src").textContent = "Kaynak: " + E.source + "." + ch.filter((c) => c.note).map((c) => ` *${c.name}: ${c.note}.`).join("") + " Hükümet kurmak için 61 sandalye gerekir.";
+}
+
+function render() { renderStatus(); renderSummary(); renderMap(); renderTable(); renderFeed(); renderExit(); }
 
 /* ---------- Döngü ---------- */
 function loop() {
@@ -1144,7 +1193,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "3306d268a9";
+const BUILD = "75dc7ad96a";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

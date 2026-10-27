@@ -843,6 +843,8 @@ const HEMI_ORDER = ["arab", "opp", "other", "unmapped", "gov"];
 let HEMI_STATE = { seats: [], share: [] };
 function renderHemi(seats, valid, share = []) {
   HEMI_STATE = { seats, share };
+  $("hemi").classList.remove("hl");
+  $("hemi-tip").hidden = true;
   const bloc = (p) => HEMI_ORDER.includes(p.bloc) ? p.bloc : "unmapped";
   const order = P.map((p, i) => i).filter((i) => seats[i] > 0)
     .sort((a, b) => HEMI_ORDER.indexOf(bloc(P[a])) - HEMI_ORDER.indexOf(bloc(P[b])) || seats[b] - seats[a]);
@@ -1230,7 +1232,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "202286122d";
+const BUILD = "848d3d848a";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

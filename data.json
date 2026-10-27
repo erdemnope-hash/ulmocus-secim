@@ -1,0 +1,49 @@
+{
+  "updatedAt": "21:10",
+  "phase": "voting",
+  "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
+  "totalBoxes": 12018,
+  "letters": null,
+  "results": null,
+  "turnout": {
+    "eligible": 7331981,
+    "hourly": [
+      { "time": "12:00", "pct": 31.5 },
+      { "time": "14:00", "pct": 44.9 },
+      { "time": "16:00", "pct": 55.7, "voters": 4085075, "prev": 47.5 },
+      { "time": "18:00", "pct": 66.7, "voters": 4892106, "prev": 57.7 },
+      { "time": "20:00", "pct": 74.3, "voters": 5449277, "prev": 66.3 }
+    ],
+    "cities": [
+      { "name": "Cezaevleri", "pct": 88.7, "time": "20:00 kapanış" },
+      { "name": "Rahat", "pct": 72, "time": "18:45" },
+      { "name": "Elkana", "pct": 72 },
+      { "name": "Elad", "pct": 71 },
+      { "name": "Karnei Shomron", "pct": 71 },
+      { "name": "Modiin İllit", "pct": 70 },
+      { "name": "Askerler (IDF)", "pct": 68, "time": "17:00" },
+      { "name": "Alfei Menashe", "pct": 67 },
+      { "name": "Bnei Brak", "pct": 64 },
+      { "name": "Beitar İllit", "pct": 64 },
+      { "name": "Tayibe", "pct": 62 },
+      { "name": "Ariel", "pct": 59 },
+      { "name": "Nasıra", "pct": 58 },
+      { "name": "Ümmü'l-Fahm", "pct": 56 }
+    ],
+    "cityVoters": [
+      { "name": "Tel Aviv-Yafa", "voters": 277751 },
+      { "name": "Kudüs", "voters": 252038 },
+      { "name": "Hayfa", "voters": 145951 },
+      { "name": "Rişon LeZion", "voters": 136762 },
+      { "name": "Petah Tikva", "voters": 130039 },
+      { "name": "Aşdod", "voters": 110538 },
+      { "name": "Netanya", "voters": 108803 },
+      { "name": "Beerşeba", "voters": 94658 },
+      { "name": "Holon", "voters": 93790 },
+      { "name": "Ramat Gan", "voters": 92610 }
+    ]
+  },
+  "sources": [
+    { "label": "Merkez Seçim Kurulu açıklamaları (Israel National News, Times of Israel, NBC News, Ynet, Walla aracılığıyla)", "url": "https://www.israelnationalnews.com/news/435215" }
+  ]
+}

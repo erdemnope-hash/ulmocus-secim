@@ -447,11 +447,18 @@ const SIM_PARTIES = [
 ];
 // Kesinleşmemiş eşleme: 2022'den bilinen harfler. Kullanıcı sayfada düzeltebilir.
 const DEFAULT_LETTERS = `מחל = likud
+דרך = yashar
+רק = together
+אמת = dems
+ודם = joint
+ל = yb
+ב = otzma
 שס = shas
 ג = utj
-ל = yb
+ט = rzp
 עם = raam
-ט = rzp`;
+די = reserv
+ך = amcha`;
 
 /* ---------- Seçmen kesimleri (simülasyonun coğrafyası) ---------- */
 const SECTORS = {
@@ -703,7 +710,7 @@ function renderStatus() {
   $("toggle-sim").textContent = mode === "sim" ? "Gerçek veriye dön" : "Simülasyonu göster";
   $("toggle-sim").hidden = mode === "sim" && !LIVE;
   $("turnout-panel").hidden = mode === "sim" || !LIVE;
-  const counted = mode === "live" && LIVE && LIVE.results;
+  const counted = mode === "live" && LIVE && (LIVE.results || (LIVE.national && LIVE.national.votes && Object.keys(LIVE.national.votes).length));
   $("banner-text").innerHTML =
     mode === "csv" ? `<b>Gerçek sonuçlar gösteriliyor:</b> ${esc(S.fileName)} dosyası ${S.loadedAt}'de elle yüklendi.`
     : mode === "live" ? (counted
@@ -733,8 +740,21 @@ function renderTurnout() {
   $("to-voters").innerHTML = (T.cityVoters || []).map((c) => bar(esc(c.name), c.voters / vmax * 100, null, fmt(c.voters))).join("") || `<span class="foot">Henüz açıklanmadı.</span>`;
 }
 
+// Yalnızca ülke toplamı bilinen sonuçlar (yerleşim dökümü henüz yok)
+function nationalAgg(n) {
+  const a = agg([]);
+  a.votes = P.map((p) => +(n.votes && n.votes[p.letter]) || 0);
+  a.valid = a.votes.reduce((x, y) => x + y, 0);
+  a.share = a.votes.map((x) => (a.valid ? x / a.valid : 0));
+  a.lead = a.valid ? a.share.indexOf(Math.max(...a.share)) : -1;
+  a.opened = +n.countedBoxes || 0;
+  a.voted = +n.voted || a.valid + (+n.invalid || 0);
+  a.invalid = +n.invalid || 0;
+  return a;
+}
+
 function renderSummary() {
-  const all = agg(S.states.flatMap((s) => s.cities));
+  const all = S.national ? nationalAgg(S.national) : agg(S.states.flatMap((s) => s.cities));
   const { seats, pass, thr } = allocate(all.votes);
   const order = P.map((_, i) => i).sort((a, b) => all.votes[b] - all.votes[a]);
   $("nat-stack").innerHTML = order.map((i) => `<span style="width:${all.share[i] * 100}%;background:${P[i].color}"></span>`).join("");
@@ -751,7 +771,7 @@ function renderSummary() {
       <span class="st num">${!all.valid ? "—" : !pass[i] ? "eşik altı" : seats[i]}</span>
     </div>`).join("") +
     (all.valid ? "" : `<p class="empty-note">Henüz sayılmış oy yok. Merkez Seçim Kurulu ilk sandık sonuçlarını açıkladığında listelerin oy oranları ve sandalyeleri burada, en çok oy alandan aza doğru sıralanacak.</p>`);
-  if (S.totalBoxes && mode !== "sim") all.progress = all.opened / S.totalBoxes, all.boxes = S.totalBoxes;
+  if (S.totalBoxes && mode !== "sim" && !(S.national && !all.opened)) all.progress = all.opened / S.totalBoxes, all.boxes = S.totalBoxes;
 
   const gov = P.reduce((a, p, i) => a + (p.bloc === "gov" ? seats[i] : 0), 0);
   $("seat-note").textContent = all.valid && P.some((p) => p.bloc === "gov") ? (gov >= 61 ? "Mevcut sayıma göre hükümet bloğu 61'e ulaşıyor." : `Mevcut sayıma göre hükümet bloğu 61'e ${61 - gov} sandalye uzak.`) : "";
@@ -1096,9 +1116,23 @@ async function loadLive() {
     } catch (e) { /* sonuç dosyası okunamazsa katılım ekranında kal */ }
   }
   showEmptyLive();
+  if (LIVE.national && LIVE.national.votes && Object.keys(LIVE.national.votes).length) {
+    // Liste kimliklerini harf eşlemesiyle kur; eşlenmeyen harfler kendi harfiyle, "אחר" diğer listeler
+    const byId = Object.fromEntries(SIM_PARTIES.map((p) => [p.id, p]));
+    const letters = LIVE.letters || {};
+    P = Object.keys(LIVE.national.votes).map((h, i) => {
+      const known = byId[letters[h]];
+      if (known) return { ...known, letter: h };
+      if (h === "אחר") return { ...byId.others, letter: h };
+      return { id: "x-" + h, name: "Liste " + h, ab: h, color: ["#5E7FA8", "#A86E5E", "#5EA88C", "#9C5EA8"][i % 4], bloc: "unmapped", letter: h };
+    });
+    S.states.forEach((s) => s.cities.forEach((c) => (c.votes = P.map(() => 0))));
+    S.national = LIVE.national;
+    render();
+  }
 }
 
-const BUILD = "e017ec44e0";
+const BUILD = "c7d9ac4159";
 let LIVE = null, wantSim = false;
 loadLive();
 setInterval(loadLive, 60000);

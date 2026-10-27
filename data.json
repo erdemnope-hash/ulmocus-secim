@@ -4,7 +4,22 @@
   "statusText": "Sandıklar kapandı · sayım sürüyor",
   "note": "<b>Sandıklar 22:00'de kapandı, sayım başladı.</b> Merkez Seçim Kurulu ilk resmi sonuçları gece 01:00 civarında (İsrail saati, Türkiye saatiyle 02:00) açıklayacağını bildirdi. Sonuçlar geldikçe bu sayfa birkaç dakikada bir güncellenir. Televizyon çıkış anketleri sonuç olmadığı için burada gösterilmez.",
   "totalBoxes": 12018,
-  "letters": null,
+  "letters": {
+    "מחל": "likud",
+    "דרך": "yashar",
+    "רק": "together",
+    "אמת": "dems",
+    "ודם": "joint",
+    "ל": "yb",
+    "ב": "otzma",
+    "שס": "shas",
+    "ג": "utj",
+    "ט": "rzp",
+    "עם": "raam",
+    "די": "reserv",
+    "ך": "amcha"
+  },
+  "national": null,
   "results": null,
   "turnout": {
     "eligible": 7331981,
@@ -234,5 +249,5 @@
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],
-  "build": "e017ec44e0"
+  "build": "c7d9ac4159"
 }

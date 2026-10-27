@@ -1,5 +1,5 @@
 {
-  "updatedAt": "21:43",
+  "updatedAt": "21:59",
   "phase": "voting",
   "statusText": "Oy verme sürüyor · sandıklar 22:00'de kapanır",
   "totalBoxes": 12018,
@@ -49,9 +49,19 @@
         "time": "20:00 kapanış"
       },
       {
+        "name": "Bat Hen",
+        "pct": 97.9,
+        "time": "20:00"
+      },
+      {
         "name": "Rahat",
-        "pct": 72.2,
-        "time": "18:00"
+        "pct": 79.8,
+        "time": "20:00"
+      },
+      {
+        "name": "Roş HaAyin",
+        "pct": 79,
+        "time": "20:00"
       },
       {
         "name": "Rehasim",
@@ -80,8 +90,8 @@
       },
       {
         "name": "Tel Aviv-Yafa",
-        "pct": 58.6,
-        "time": "18:00"
+        "pct": 63.6,
+        "time": "20:00"
       },
       {
         "name": "Holon",
@@ -95,13 +105,13 @@
       },
       {
         "name": "Kudüs",
-        "pct": 55.3,
-        "time": "18:00"
+        "pct": 62,
+        "time": "20:00"
       },
       {
         "name": "Hayfa",
-        "pct": 54.5,
-        "time": "18:00"
+        "pct": 59.8,
+        "time": "20:00"
       },
       {
         "name": "Netanya",
@@ -137,7 +147,8 @@
       },
       {
         "name": "Modiin İllit",
-        "pct": 70
+        "pct": 77.3,
+        "time": "20:00"
       },
       {
         "name": "Askerler (IDF)",

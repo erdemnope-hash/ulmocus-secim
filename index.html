@@ -248,6 +248,19 @@ td.r, th.r { text-align: right; }
 .chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
 .chip.none { color: var(--muted); font-weight: 400; }
 .tag-done { font: 600 10px/1 var(--font-body); letter-spacing: .06em; color: var(--ok); text-transform: uppercase; margin-left: 6px; }
+tr.copen td { background: var(--surface-2); }
+tr.cdet td { background: var(--surface-2); padding: 4px 16px 16px; }
+.cdet-h { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; margin-bottom: 10px; }
+.cdet-h b { font: 600 18px/1.2 var(--font-display); }
+.cdet-f { font: 400 12px var(--font-mono); color: var(--muted); }
+.cdet-list { display: grid; gap: 6px; max-width: 720px; }
+.cdet-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) 64px 56px; gap: 10px; align-items: center; font-size: 13px; }
+.cdet-row .nm { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cdet-row .nm i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); flex: none; }
+.cdet-row .bar { height: 10px; background: var(--surface); border-radius: 2px; position: relative; }
+.cdet-row .bar b { position: absolute; inset: 0 auto 0 0; background: var(--c); border-radius: 2px; }
+.cdet-row .v, .cdet-row .p { text-align: right; font: 500 12px var(--font-mono); font-variant-numeric: tabular-nums; }
+.cdet-note { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
 .back { border: 0; background: none; color: var(--accent); cursor: pointer; padding: 0; font-weight: 600; font-size: 13px; }
 
 /* Feed */
@@ -922,6 +935,27 @@ function row(label, sub, a, attrs, cls) {
   </tr>`;
 }
 
+let selectedCity = null;
+function cityDetail(c, a) {
+  const order = P.map((_, i) => i).filter((i) => a.votes[i] > 0).sort((x, y) => a.votes[y] - a.votes[x]);
+  const max = Math.max(1, ...order.map((i) => a.votes[i]));
+  const facts = [
+    `${fmt(c.opened)}${c.boxes ? " / " + fmt(c.boxes) : ""} sandık sayıldı`,
+    `${fmt(c.voted)} oy`,
+    c.invalid ? `${fmt(c.invalid)} geçersiz` : "",
+  ].filter(Boolean).join(" · ");
+  return `<tr class="cdet"><td colspan="5">
+    <div class="cdet-h"><b>${esc(c.name)}</b> <span class="he" lang="he">${esc(c.he)}</span><span class="cdet-f">${facts}</span></div>
+    <div class="cdet-list">${order.map((i) => `
+      <div class="cdet-row" style="--c:${P[i].color}">
+        <span class="nm"><i></i>${esc(P[i].name)}</span>
+        <span class="bar"><b style="width:${a.votes[i] / max * 100}%"></b></span>
+        <span class="v">${fmt(a.votes[i])}</span><span class="p">${pct(a.share[i], 1)}</span>
+      </div>`).join("")}</div>
+    ${P.some((p, i) => p.id === "others" && a.votes[i]) ? `<p class="cdet-note">"Diğer listeler" satırı, haberlerde ayrı verilmeyen listelerin ve geçersiz oyların toplamıdır.</p>` : ""}
+  </td></tr>`;
+}
+
 function renderTable() {
   if (selected === null) {
     $("tbl-title").textContent = "Mıntıka mıntıka sonuçlar";
@@ -936,8 +970,14 @@ function renderTable() {
     $("tbl-title").textContent = st.name;
     $("tbl-hint").innerHTML = `<button class="back" id="back">← Tüm mıntıkalar</button>`;
     $("col-name").textContent = "Şehir / yerleşim";
-    const cities = [...st.cities].sort((x, y) => y.reg - x.reg || y.voted - x.voted);
-    $("tbl").innerHTML = cities.map((c) => row(esc(c.name), `${c.he && c.he !== c.name ? `<span class="he" lang="he">${esc(c.he)}</span> · ` : ""}${c.reg ? fmt(c.reg) + " seçmen" : esc(c.code)}`, agg([c]), "")).join("") +
+    // Sonucu gelen yerleşimler önce; satıra dokununca altında yerleşimin tam oy dağılımı açılır
+    const cities = [...st.cities].sort((x, y) => (y.voted > 0) - (x.voted > 0) || y.reg - x.reg || y.voted - x.voted);
+    $("tbl").innerHTML = cities.map((c) => {
+      const a = agg([c]);
+      const open = selectedCity === c.he;
+      return row(`${open ? "▾ " : c.voted ? "▸ " : ""}${esc(c.name)}`, `${c.he && c.he !== c.name ? `<span class="he" lang="he">${esc(c.he)}</span> · ` : ""}${c.reg ? fmt(c.reg) + " seçmen" : esc(c.code)}`, a, c.voted ? `tabindex="0" data-c="${esc(c.he)}"` : "", open ? "copen" : "") +
+        (open ? cityDetail(c, a) : "");
+    }).join("") +
       row("Mıntıka toplamı", `${st.cities.length} yerleşim`, agg(st.cities), "", "total");
   }
 }
@@ -1173,7 +1213,10 @@ $("map").addEventListener("click", pickDistrict);
 $("map").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pickDistrict(e); } });
 function pickRow(e) {
   if (e.target.closest("#back")) { selected = null; renderMap(); renderTable(); return; }
+  const ct = e.target.closest("tr[data-c]");
+  if (ct) { const he = ct.getAttribute("data-c"); selectedCity = selectedCity === he ? null : he; renderTable(); return; }
   const tr = e.target.closest("tr[data-i]"); if (!tr) return;
+  selectedCity = null;
   selected = +tr.dataset.i; renderMap(); renderTable();
 }
 document.addEventListener("click", (e) => { if (e.target.closest("#tbl, #tbl-hint")) pickRow(e); });
@@ -1240,7 +1283,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "26cdd811bc";
+const BUILD = "aeb24d93e7";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

@@ -1,8 +1,8 @@
 {
-  "updatedAt": "02:58",
+  "updatedAt": "03:28",
   "phase": "counting",
-  "statusText": "Gerçek sayım · sandıkların %6,5'i sayıldı",
-  "note": "<b>Gerçek sayım sürüyor:</b> sandıkların %6,5'i sayıldı (320.750 geçerli oy). Liste oranları Merkez Seçim Kurulu verisini yayınlayan Poliwave'den alınıyor ve birkaç dakikada bir güncelleniyor. Sandıklar rastgele sırayla sayılmadığı için oranlar sayım ilerledikçe değişebilir. Kesin katılım: %77,7.",
+  "statusText": "Gerçek sayım · sandıkların %12,6'i sayıldı",
+  "note": "<b>Gerçek sayım sürüyor:</b> sandıkların %12,6'i sayıldı (629.580 geçerli oy). Liste oranları Merkez Seçim Kurulu verisini yayınlayan Poliwave'den alınıyor ve birkaç dakikada bir güncelleniyor. Sandıklar rastgele sırayla sayılmadığı için oranlar sayım ilerledikçe değişebilir. Kesin katılım: %77,7.",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -22,26 +22,26 @@
   },
   "national": {
     "votes": {
-      "מחל": 89002,
-      "ב": 23154,
-      "שס": 18716,
-      "ט": 16889,
-      "ג": 16452,
-      "דרך": 52408,
-      "רק": 28824,
-      "ל": 26111,
-      "אמת": 15799,
-      "ודם": 10831,
-      "עם": 3258,
-      "די": 10509,
-      "ך": 5922,
-      "אחר": 2875
+      "מחל": 159554,
+      "ב": 41582,
+      "ג": 40900,
+      "שס": 36936,
+      "ט": 32727,
+      "דרך": 104502,
+      "רק": 56806,
+      "ל": 46003,
+      "אמת": 35060,
+      "ודם": 27442,
+      "עם": 10581,
+      "די": 19477,
+      "ך": 11563,
+      "אחר": 6447
     },
-    "total": 320750,
-    "countedBoxes": 781,
+    "total": 629580,
+    "countedBoxes": 1514,
     "noSeats": false,
-    "otherLabel": "Diğer küçük listeler (24 liste)",
-    "seatNote": "Meclis, şu ana kadar sayılan oylara göre (sandıkların %6,5'i) hesaplandı; resmi sandalye dağılımı değildir. Sayım ilerledikçe değişecek."
+    "otherLabel": "Diğer küçük listeler (25 liste)",
+    "seatNote": "Meclis, şu ana kadar sayılan oylara göre (sandıkların %12,6'i) hesaplandı; resmi sandalye dağılımı değildir. Sayım ilerledikçe değişecek."
   },
   "exitPolls": {
     "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",

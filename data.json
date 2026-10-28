@@ -1,8 +1,8 @@
 {
-  "updatedAt": "03:55",
+  "updatedAt": "04:06",
   "phase": "counting",
-  "statusText": "Gerçek veri · sandıkların %20,1'i sayıldı",
-  "note": null,
+  "statusText": "Gerçek sayım · sandıkların %23,9'i sayıldı",
+  "note": "<b>Gerçek sayım sürüyor:</b> sandıkların %23,9'i sayıldı (1.210.461 geçerli oy). Liste oranları Merkez Seçim Kurulu verisini yayınlayan Poliwave'den alınıyor ve birkaç dakikada bir güncelleniyor. Sandıklar rastgele sırayla sayılmadığı için oranlar sayım ilerledikçe değişebilir. Kesin katılım: %77,7.",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -22,26 +22,26 @@
   },
   "national": {
     "votes": {
-      "מחל": 229760,
-      "ג": 63436,
-      "ב": 60773,
-      "שס": 53545,
-      "ט": 51411,
-      "דרך": 152993,
-      "רק": 83575,
-      "ל": 66096,
-      "אמת": 53282,
-      "ודם": 55816,
-      "עם": 26217,
-      "די": 28125,
-      "ך": 17442,
-      "אחר": 9579
+      "מחל": 282772,
+      "ג": 80348,
+      "ב": 76229,
+      "שס": 69641,
+      "ט": 69609,
+      "דרך": 190524,
+      "רק": 103220,
+      "ל": 80706,
+      "אמת": 70003,
+      "ודם": 79154,
+      "עם": 38751,
+      "די": 34664,
+      "ך": 22022,
+      "אחר": 12818
     },
-    "total": 952050,
-    "countedBoxes": 2259,
+    "total": 1210461,
+    "countedBoxes": 2872,
     "noSeats": false,
-    "otherLabel": "Diğer küçük listeler (24 liste)",
-    "seatNote": "Meclis, şu ana kadar sayılan oylara göre (sandıkların %18,8'i) hesaplandı; resmi sandalye dağılımı değildir. Sayım ilerledikçe değişecek."
+    "otherLabel": "Diğer küçük listeler (25 liste)",
+    "seatNote": "Meclis, şu ana kadar sayılan oylara göre (sandıkların %23,9'i) hesaplandı; resmi sandalye dağılımı değildir. Sayım ilerledikçe değişecek."
   },
   "exitPolls": {
     "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",

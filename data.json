@@ -1,8 +1,8 @@
 {
-  "updatedAt": "22:00",
+  "updatedAt": "02:05",
   "phase": "counting",
-  "statusText": "Sandıklar kapandı · sayım sürüyor",
-  "note": "<b>Sandıklar 22:00'de kapandı, sayım başladı.</b> Merkez Seçim Kurulu ilk resmi sonuçları gece 01:00 civarında (İsrail saati, Türkiye saatiyle 02:00) açıklayacağını bildirdi. Sonuçlar geldikçe bu sayfa birkaç dakikada bir güncellenir. Televizyon çıkış anketleri sonuç olmadığı için burada gösterilmez.",
+  "statusText": "Sayım sürüyor · kurul ilk sandıkları açıkladı",
+  "note": "<b>Sayım başladı.</b> Merkez Seçim Kurulu ilk sandık sonuçlarını açıklıyor (İsrail saatiyle 01:00 itibarıyla 12.018 sandıktan yaklaşık 128'i, %1). Bu sayfanın kullandığı sandık bazlı veri kaynağı henüz güncellenmediği için oy oranları ve sandalyeler kaynak güncellendiğinde burada görünecek. Kesin katılım: %77,7 (5.695.682 seçmen).",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -59,7 +59,7 @@
       },
       {
         "name": "Kanal 13",
-        "time": "22:49 güncel",
+        "time": "gece güncel",
         "seats": {
           "likud": 25,
           "yashar": 23,
@@ -147,6 +147,11 @@
         "pct": 74.3,
         "voters": 5449277,
         "prev": 66.3
+      },
+      {
+        "time": "22:00 (kapanış)",
+        "pct": 77.7,
+        "voters": 5695682
       }
     ],
     "cities": [
@@ -336,7 +341,7 @@
   },
   "sources": [
     {
-      "label": "Merkez Seçim Kurulu açıklamaları (Ynet, Walla, Mako/N12, Davar, Israel National News, Times of Israel aracılığıyla). Not: Tel Aviv belediyesi kendi hesabıyla şehirde katılımı %65,3 olarak açıkladı; burada kurulun rakamı kullanıldı",
+      "label": "Merkez Seçim Kurulu açıklamaları (Ynet, Walla, Mako/N12, Davar, Israel National News, Times of Israel aracılığıyla)",
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],

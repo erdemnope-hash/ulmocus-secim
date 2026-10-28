@@ -892,7 +892,7 @@ function renderHemi(seats, valid, share = []) {
     ? (mode === "sim" ? "Simülasyon · " : "Mevcut sayıma göre · ") + "120 sandalye · çoğunluk 61"
     : "120 sandalye · çoğunluk 61 · henüz sayılmış oy yok";
   const names = { ...Object.fromEntries(Object.entries(BLOCS).map(([k, v]) => [k, v])), unmapped: { name: "Eşlenmemiş listeler", color: "#9AA3B2" } };
-  if (S && S.national) names.other = { ...names.other, name: "Oranı açıklanmayan listeler" };
+  if (S && S.national && Object.keys(S.national.votes || {}).length < 6) names.other = { ...names.other, name: "Oranı açıklanmayan listeler" };
   $("hemi-blocs").innerHTML = valid ? HEMI_ORDER.slice().reverse().filter((k) => bs[k]).map((k) => `
     <div class="hb" style="--c:${names[k].color}">
       <span class="n"><i></i>${names[k].name}</span><span class="s">${bs[k]}</span>
@@ -1288,7 +1288,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "1f715d4cd1";
+const BUILD = "bcab841de8";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

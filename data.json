@@ -1,8 +1,8 @@
 {
-  "updatedAt": "02:50",
+  "updatedAt": "02:58",
   "phase": "counting",
-  "statusText": "Gerçek sayım · 302 sandık (%2,5) sayıldı",
-  "note": "<b>Kısmi gerçek sayım:</b> Merkez Seçim Kurulu 12.018 sandıktan 302'sini (%2,5; 94.098 oy) açıkladı. Kurul ve haberler şu an yalnızca ilk üç listenin oranını veriyor: Likud %26,61, Yashar %17,09, Birlikte (Bennett) %8,93; diğer listelerin oranları henüz açıklanmadı ve listede \"açıklanmadı\" olarak görünüyor. Sandıklar rastgele sayılmadığı için bu oranlar sayım ilerledikçe değişebilir; meclis dağılımı şimdilik bu kısmi oranlarla hesaplanıyor; şehir tablosunda haberlerde sonucu verilen 15 yerleşim var. Kesin katılım: %77,7. Kaynak: i24NEWS, Ynet.",
+  "statusText": "Gerçek sayım · sandıkların %6,5'i sayıldı",
+  "note": "<b>Gerçek sayım sürüyor:</b> sandıkların %6,5'i sayıldı (320.750 geçerli oy). Liste oranları Merkez Seçim Kurulu verisini yayınlayan Poliwave'den alınıyor ve birkaç dakikada bir güncelleniyor. Sandıklar rastgele sırayla sayılmadığı için oranlar sayım ilerledikçe değişebilir. Kesin katılım: %77,7.",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -22,15 +22,26 @@
   },
   "national": {
     "votes": {
-      "מחל": 25039,
-      "דרך": 16081,
-      "רק": 8403,
-      "אחר": 44575
+      "מחל": 89002,
+      "ב": 23154,
+      "שס": 18716,
+      "ט": 16889,
+      "ג": 16452,
+      "דרך": 52408,
+      "רק": 28824,
+      "ל": 26111,
+      "אמת": 15799,
+      "ודם": 10831,
+      "עם": 3258,
+      "די": 10509,
+      "ך": 5922,
+      "אחר": 2875
     },
-    "countedBoxes": 302,
+    "total": 320750,
+    "countedBoxes": 781,
     "noSeats": false,
-    "otherLabel": "Açıklanmayan listeler (toplu)",
-    "seatNote": "Meclis, kısmi sayıma (%2,5) göre hesaplandı. Kurul ve haberler şu an sadece Likud, Yashar ve Birlikte'nin oranını açıkladı; oranı açıklanmayan listelerin oyları meclis çiziminde tek gri grup olarak sandalye alıyor. Diğer listelerin oranları açıklandıkça dağılım değişecek."
+    "otherLabel": "Diğer küçük listeler (24 liste)",
+    "seatNote": "Meclis, şu ana kadar sayılan oylara göre (sandıkların %6,5'i) hesaplandı; resmi sandalye dağılımı değildir. Sayım ilerledikçe değişecek."
   },
   "exitPolls": {
     "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",
@@ -376,5 +387,5 @@
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],
-  "build": "1f715d4cd1"
+  "build": "bcab841de8"
 }

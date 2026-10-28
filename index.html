@@ -129,6 +129,8 @@ h1 .he { font-size: .55em; font-weight: 500; color: var(--muted); margin-left: 1
 .prow .pb span { position: absolute; inset: 0 auto 0 0; background: var(--c); border-radius: 2px; transition: width .5s ease; }
 .prow .pb b { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--live); }
 .prow.below .pb span { opacity: .45; }
+.prow.unknown { color: var(--muted); }
+.prow.unknown .vt { font: 500 11px var(--font-body); color: var(--muted); }
 .prow.head { font: 600 11px/1.2 var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 0; }
 .prow i { width: 12px; height: 12px; border-radius: 2px; background: var(--c); }
 .prow .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -811,19 +813,21 @@ function renderSummary() {
   if (noSeats) { seats = seats.map(() => 0); pass = pass.map(() => true); }
   // "Diğer listeler" her zaman en altta
   // Ülke toplamı kısmi açıklandıysa sadece oranı açıklanan listeler gösterilir (diğerleri "Diğer" satırında)
-  const order = P.map((_, i) => i).filter((i) => !S.national || P[i].letter in S.national.votes).sort((a, b) => (P[a].id === "others") - (P[b].id === "others") || all.votes[b] - all.votes[a]);
+  const known = (i) => !S.national || P[i].letter in S.national.votes;
+  // Kısmi ülke toplamında: oranı açıklanan listeler önce, açıklanmayanlar "açıklanmadı" diye altta; toplu "Diğer" satırı listede gösterilmez
+  const order = P.map((_, i) => i).filter((i) => !(S.national && P[i].id === "others")).sort((a, b) => known(b) - known(a) || (P[a].id === "others") - (P[b].id === "others") || all.votes[b] - all.votes[a]);
   $("nat-stack").innerHTML = order.map((i) => `<span style="width:${all.share[i] * 100}%;background:${P[i].color}"></span>`).join("");
   // Çubuk ölçeği: en yüksek oy oranı (en az %20), baraj çizgisi aynı ölçekte
   const scale = Math.max(.2, ...all.share);
   const head = `<div class="prow head"><span class="rk">#</span><span></span><span>Liste</span><span>Oy oranı · kesikli çizgi %3,25 baraj</span><span class="r">Oy %</span><span class="r vt">Oy</span><span class="r">Snd.</span></div>`;
   $("nat-parties").innerHTML = head + order.map((i, rank) => `
-    <div class="prow${all.valid && !pass[i] ? " below" : ""}" style="--c:${P[i].color}">
-      <span class="rk">${all.valid ? rank + 1 : ""}</span>
+    <div class="prow${all.valid && known(i) && !pass[i] ? " below" : ""}${known(i) ? "" : " unknown"}" style="--c:${P[i].color}">
+      <span class="rk">${all.valid && known(i) ? rank + 1 : ""}</span>
       <i></i><span class="nm" title="${esc(P[i].name)}">${esc(P[i].name)}</span>
       <span class="pb"><span style="width:${all.share[i] / scale * 100}%"></span><b style="left:${THRESHOLD / scale * 100}%"></b></span>
-      <span class="pc num">${all.valid ? pct(all.share[i]) : "—"}</span>
-      <span class="vt">${all.valid ? fmt(all.votes[i]) : "—"}</span>
-      <span class="st num">${!all.valid || noSeats ? "—" : !pass[i] ? "eşik altı" : seats[i]}</span>
+      <span class="pc num">${all.valid && known(i) ? pct(all.share[i]) : "—"}</span>
+      <span class="vt">${all.valid && known(i) ? fmt(all.votes[i]) : known(i) ? "—" : "açıklanmadı"}</span>
+      <span class="st num">${!all.valid || noSeats ? "—" : !known(i) ? "—" : !pass[i] ? "eşik altı" : seats[i]}</span>
     </div>`).join("") +
     (all.valid ? "" : `<p class="empty-note">Henüz sayılmış oy yok. Merkez Seçim Kurulu ilk sandık sonuçlarını açıkladığında listelerin oy oranları ve sandalyeleri burada, en çok oy alandan aza doğru sıralanacak.</p>`);
   if (S.totalBoxes && mode !== "sim" && !(S.national && !all.opened)) all.progress = all.opened / S.totalBoxes, all.boxes = S.totalBoxes;
@@ -888,6 +892,7 @@ function renderHemi(seats, valid, share = []) {
     ? (mode === "sim" ? "Simülasyon · " : "Mevcut sayıma göre · ") + "120 sandalye · çoğunluk 61"
     : "120 sandalye · çoğunluk 61 · henüz sayılmış oy yok";
   const names = { ...Object.fromEntries(Object.entries(BLOCS).map(([k, v]) => [k, v])), unmapped: { name: "Eşlenmemiş listeler", color: "#9AA3B2" } };
+  if (S && S.national) names.other = { ...names.other, name: "Oranı açıklanmayan listeler" };
   $("hemi-blocs").innerHTML = valid ? HEMI_ORDER.slice().reverse().filter((k) => bs[k]).map((k) => `
     <div class="hb" style="--c:${names[k].color}">
       <span class="n"><i></i>${names[k].name}</span><span class="s">${bs[k]}</span>
@@ -1283,7 +1288,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "aeb24d93e7";
+const BUILD = "1f715d4cd1";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

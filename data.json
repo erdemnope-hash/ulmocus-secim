@@ -2,7 +2,7 @@
   "updatedAt": "02:50",
   "phase": "counting",
   "statusText": "Gerçek sayım · 302 sandık (%2,5) sayıldı",
-  "note": "<b>Kısmi gerçek sayım:</b> Merkez Seçim Kurulu 12.018 sandıktan 302'sini (%2,5; 94.098 oy) açıkladı. Kurul ve haberler şu an yalnızca ilk üç listenin oranını veriyor: Likud %26,61, Yashar %17,09, Birlikte (Bennett) %8,93; kalan oylar \"diğer listeler\" satırında toplu gösteriliyor. Sandıklar rastgele sayılmadığı için bu oranlar sayım ilerledikçe değişebilir; meclis dağılımı şimdilik bu kısmi oranlarla hesaplanıyor; şehir tablosunda haberlerde sonucu verilen 15 yerleşim var. Kesin katılım: %77,7. Kaynak: i24NEWS, Ynet.",
+  "note": "<b>Kısmi gerçek sayım:</b> Merkez Seçim Kurulu 12.018 sandıktan 302'sini (%2,5; 94.098 oy) açıkladı. Kurul ve haberler şu an yalnızca ilk üç listenin oranını veriyor: Likud %26,61, Yashar %17,09, Birlikte (Bennett) %8,93; diğer listelerin oranları henüz açıklanmadı ve listede \"açıklanmadı\" olarak görünüyor. Sandıklar rastgele sayılmadığı için bu oranlar sayım ilerledikçe değişebilir; meclis dağılımı şimdilik bu kısmi oranlarla hesaplanıyor; şehir tablosunda haberlerde sonucu verilen 15 yerleşim var. Kesin katılım: %77,7. Kaynak: i24NEWS, Ynet.",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -29,8 +29,8 @@
     },
     "countedBoxes": 302,
     "noSeats": false,
-    "otherLabel": "Diğer tüm listeler (ayrı oranları açıklanmadı)",
-    "seatNote": "Meclis, kısmi sayıma (%2,5) göre hesaplandı; ayrı oranı açıklanmayan listeler tek \"Diğer\" grubu olarak sandalye alıyor. Sayım ilerledikçe ve tüm listelerin oyu geldikçe dağılım değişecek."
+    "otherLabel": "Açıklanmayan listeler (toplu)",
+    "seatNote": "Meclis, kısmi sayıma (%2,5) göre hesaplandı. Kurul ve haberler şu an sadece Likud, Yashar ve Birlikte'nin oranını açıkladı; oranı açıklanmayan listelerin oyları meclis çiziminde tek gri grup olarak sandalye alıyor. Diğer listelerin oranları açıklandıkça dağılım değişecek."
   },
   "exitPolls": {
     "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",
@@ -376,5 +376,5 @@
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],
-  "build": "aeb24d93e7"
+  "build": "1f715d4cd1"
 }

@@ -874,7 +874,8 @@ const HEMI_SEATS = (() => {
 // Koltuğa tıklayınca listenin Vikipedi sayfası (makalesi kesin bilinmeyen yeni listeler için Vikipedi araması)
 const WIKI = {
   likud: "Likud", shas: "Shas", otzma: "Otzma_Yehudit", utj: "United_Torah_Judaism", rzp: "Religious_Zionist_Party",
-  yb: "Yisrael_Beiteinu", raam: "United_Arab_List", joint: "Joint_List", dems: "The_Democrats_(Israel)",
+  yb: "Yisrael_Beiteinu", raam: "Ra%27am", joint: "Joint_List", dems: "The_Democrats_(Israel)",
+  yashar: "Yashar_(political_party)", reserv: "The_Reservists_(political_party)", amcha: "Amcha_Yisrael", hpublic: "Haredi_Public",
 };
 const WIKI_SEARCH = { yashar: "Yashar Gadi Eisenkot party", together: "Together Naftali Bennett party", reserv: "Reservists Yoaz Hendel party", amcha: "Amcha Yisrael Ofer Winter", hpublic: "Haredi Public Moti Leitner" };
 const wikiUrl = (p) => WIKI[p.id] ? "https://en.wikipedia.org/wiki/" + WIKI[p.id]
@@ -1309,7 +1310,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "238819c388";
+const BUILD = "85dc7978d4";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

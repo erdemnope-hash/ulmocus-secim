@@ -797,7 +797,8 @@ function renderSummary() {
   let { seats, pass, thr } = allocate(all.votes);
   if (noSeats) { seats = seats.map(() => 0); pass = pass.map(() => true); }
   // "Diğer listeler" her zaman en altta
-  const order = P.map((_, i) => i).sort((a, b) => (P[a].id === "others") - (P[b].id === "others") || all.votes[b] - all.votes[a]);
+  // Ülke toplamı kısmi açıklandıysa sadece oranı açıklanan listeler gösterilir (diğerleri "Diğer" satırında)
+  const order = P.map((_, i) => i).filter((i) => !S.national || P[i].letter in S.national.votes).sort((a, b) => (P[a].id === "others") - (P[b].id === "others") || all.votes[b] - all.votes[a]);
   $("nat-stack").innerHTML = order.map((i) => `<span style="width:${all.share[i] * 100}%;background:${P[i].color}"></span>`).join("");
   // Çubuk ölçeği: en yüksek oy oranı (en az %20), baraj çizgisi aynı ölçekte
   const scale = Math.max(.2, ...all.share);
@@ -816,6 +817,7 @@ function renderSummary() {
 
   const gov = P.reduce((a, p, i) => a + (p.bloc === "gov" ? seats[i] : 0), 0);
   $("seat-note").textContent = all.valid && P.some((p) => p.bloc === "gov") ? (gov >= 61 ? "Mevcut sayıma göre hükümet bloğu 61'e ulaşıyor." : `Mevcut sayıma göre hükümet bloğu 61'e ${61 - gov} sandalye uzak.`) : "";
+  if (S.national && S.national.seatNote) $("seat-note").textContent = S.national.seatNote;
   renderHemi(seats, all.valid > 0 && !noSeats, all.share);
 
   $("st-boxes-pct").textContent = all.progress === null ? "—" : pct(all.progress);
@@ -1216,6 +1218,8 @@ async function loadLive() {
       const r = await fetch(DATA_BASE + LIVE.results.file + "?t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
       loadCSV(await r.text(), LIVE.results.file, { mode: "live", letters: LIVE.letters, loadedAt: LIVE.updatedAt, totalBoxes: LIVE.totalBoxes, recent: LIVE.results.recent });
+      // Yerleşim dökümü eksikken ülke toplamı ayrıca biliniyorsa oy oranı listesi ve meclis ülke toplamından hesaplanır
+      if (LIVE.national && LIVE.national.votes && Object.keys(LIVE.national.votes).length) { S.national = LIVE.national; render(); }
       return;
     } catch (e) { /* sonuç dosyası okunamazsa katılım ekranında kal */ }
   }
@@ -1236,7 +1240,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "d9c219e782";
+const BUILD = "26cdd811bc";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

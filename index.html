@@ -871,6 +871,15 @@ const HEMI_SEATS = (() => {
   });
   return pts.sort((a, b) => b.t - a.t || a.r - b.r);
 })();
+// Koltuğa tıklayınca listenin Vikipedi sayfası (makalesi kesin bilinmeyen yeni listeler için Vikipedi araması)
+const WIKI = {
+  likud: "Likud", shas: "Shas", otzma: "Otzma_Yehudit", utj: "United_Torah_Judaism", rzp: "Religious_Zionist_Party",
+  yb: "Yisrael_Beiteinu", raam: "United_Arab_List", joint: "Joint_List", dems: "The_Democrats_(Israel)",
+};
+const WIKI_SEARCH = { yashar: "Yashar Gadi Eisenkot party", together: "Together Naftali Bennett party", reserv: "Reservists Yoaz Hendel party", amcha: "Amcha Yisrael Ofer Winter", hpublic: "Haredi Public Moti Leitner" };
+const wikiUrl = (p) => WIKI[p.id] ? "https://en.wikipedia.org/wiki/" + WIKI[p.id]
+  : "https://en.wikipedia.org/w/index.php?search=" + encodeURIComponent(WIKI_SEARCH[p.id] || p.name);
+
 const HEMI_ORDER = ["arab", "opp", "other", "unmapped", "gov"];
 
 let HEMI_STATE = { seats: [], share: [] };
@@ -889,7 +898,9 @@ function renderHemi(seats, valid, share = []) {
   // Her koltuğun üstüne gelince listenin adı, sandalye sayısı ve oy oranı görünür
   $("hemi").innerHTML = HEMI_SEATS.map((s, k) => {
     const i = owner[k];
-    return `<circle class="seat" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="7.4" fill="${i === undefined ? "var(--line)" : P[i].color}" data-p="${i === undefined ? "" : i}"></circle>`;
+    const c = `<circle class="seat" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="7.4" fill="${i === undefined ? "var(--line)" : P[i].color}" data-p="${i === undefined ? "" : i}"></circle>`;
+    return i === undefined || P[i].id === "others" || P[i].id.startsWith("x-") ? c
+      : `<a href="${wikiUrl(P[i])}" target="_blank" rel="noopener" aria-label="${esc(P[i].name)} — Vikipedi">${c}</a>`;
   }).join("") +
     `<line class="maj-line" x1="200" y1="114" x2="200" y2="2"></line>` +
     (valid
@@ -1210,13 +1221,13 @@ function seatTip(e) {
   svg.querySelectorAll("circle.seat").forEach((s) => s.classList.toggle("on", s.getAttribute("data-p") === String(i)));
   const box = svg.parentNode.getBoundingClientRect(), r = c.getBoundingClientRect();
   const sh = HEMI_STATE.share[i];
-  tip.innerHTML = `<b>${esc(P[i].name)}</b>${HEMI_STATE.seats[i]} sandalye${sh ? " · oyların " + pct(sh) : ""}`;
+  tip.innerHTML = `<b>${esc(P[i].name)}</b>${HEMI_STATE.seats[i]} sandalye${sh ? " · oyların " + pct(sh) : ""}${P[i].id === "others" ? "" : "<br><small>Tıkla: Vikipedi sayfası</small>"}`;
   tip.style.left = Math.min(Math.max(r.left + r.width / 2 - box.left, 70), box.width - 70) + "px";
   tip.style.top = r.top - box.top + "px";
   tip.hidden = false;
 }
 $("hemi").addEventListener("mouseover", seatTip);
-$("hemi").addEventListener("click", seatTip);
+
 $("hemi").addEventListener("mouseleave", () => { $("hemi").classList.remove("hl"); $("hemi-tip").hidden = true; });
 
 function pickDistrict(e) {
@@ -1298,7 +1309,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "8845727067";
+const BUILD = "238819c388";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

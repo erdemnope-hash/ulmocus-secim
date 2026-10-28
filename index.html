@@ -130,6 +130,12 @@ h1 .he { font-size: .55em; font-weight: 500; color: var(--muted); margin-left: 1
 .prow .pb b { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1.5px dashed var(--live); }
 .prow.below .pb span { opacity: .45; }
 .prow.unknown { color: var(--muted); }
+.btag { display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 4px; font: 600 10px/1.5 var(--font-body); letter-spacing: .04em; text-transform: uppercase; vertical-align: 1px; border: 1px solid currentColor; }
+.btag.b-gov { color: #2456B8; }
+.btag.b-opp { color: #0E8C8C; }
+.btag.b-arab { color: #2E8B3E; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btag.b-gov { color: #7FA6F0; } :root:not([data-theme="light"]) .btag.b-opp { color: #4CC3C3; } :root:not([data-theme="light"]) .btag.b-arab { color: #6BCB7A; } }
+:root[data-theme="dark"] .btag.b-gov { color: #7FA6F0; } :root[data-theme="dark"] .btag.b-opp { color: #4CC3C3; } :root[data-theme="dark"] .btag.b-arab { color: #6BCB7A; }
 .prow.unknown .vt { font: 500 11px var(--font-body); color: var(--muted); }
 .prow.head { font: 600 11px/1.2 var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 0; }
 .prow i { width: 12px; height: 12px; border-radius: 2px; background: var(--c); }
@@ -793,6 +799,10 @@ function renderTurnout() {
 }
 
 // Yalnızca ülke toplamı bilinen sonuçlar (yerleşim dökümü henüz yok)
+// Blok etiketi: Netanyahu koalisyonu → Hükümet, Eisenkot tarafı → Muhalefet, Arap partileri → Arap
+const BLOC_TAG = { gov: "Hükümet", opp: "Muhalefet", arab: "Arap" };
+const blocTag = (p) => (BLOC_TAG[p.bloc] ? `<span class="btag b-${p.bloc}">${BLOC_TAG[p.bloc]}</span>` : "");
+
 function nationalAgg(n) {
   const a = agg([]);
   a.votes = P.map((p) => +(n.votes && n.votes[p.letter]) || 0);
@@ -823,7 +833,7 @@ function renderSummary() {
   $("nat-parties").innerHTML = head + order.map((i, rank) => `
     <div class="prow${all.valid && known(i) && !pass[i] ? " below" : ""}${known(i) ? "" : " unknown"}" style="--c:${P[i].color}">
       <span class="rk">${all.valid && known(i) ? rank + 1 : ""}</span>
-      <i></i><span class="nm" title="${esc(P[i].name)}">${esc(P[i].name)}</span>
+      <i></i><span class="nm" title="${esc(P[i].name)}">${blocTag(P[i])}${esc(P[i].name)}</span>
       <span class="pb"><span style="width:${all.share[i] / scale * 100}%"></span><b style="left:${THRESHOLD / scale * 100}%"></b></span>
       <span class="pc num">${all.valid && known(i) ? pct(all.share[i]) : "—"}</span>
       <span class="vt">${all.valid && known(i) ? fmt(all.votes[i]) : known(i) ? "—" : "açıklanmadı"}</span>
@@ -953,7 +963,7 @@ function cityDetail(c, a) {
     <div class="cdet-h"><b>${esc(c.name)}</b> <span class="he" lang="he">${esc(c.he)}</span><span class="cdet-f">${facts}</span></div>
     <div class="cdet-list">${order.map((i) => `
       <div class="cdet-row" style="--c:${P[i].color}">
-        <span class="nm"><i></i>${esc(P[i].name)}</span>
+        <span class="nm"><i></i>${blocTag(P[i])}${esc(P[i].name)}</span>
         <span class="bar"><b style="width:${a.votes[i] / max * 100}%"></b></span>
         <span class="v">${fmt(a.votes[i])}</span><span class="p">${pct(a.share[i], 1)}</span>
       </div>`).join("")}</div>
@@ -1021,7 +1031,7 @@ function renderExit() {
   const cell = (n, cls = "") => `<td class="v ${n ? "" : "zero"} ${cls}">${n || "–"}</td>`;
   $("exit-tbl").innerHTML =
     `<thead><tr><th>Liste</th>${ch.map((c) => `<th class="ch">${esc(c.name)}${c.note ? "*" : ""}<small>${esc(c.time)}</small></th>`).join("")}</tr></thead><tbody>` +
-    ids.map((id) => `<tr><td><span class="pn" style="--c:${byId[id].color}"><i></i>${esc(byId[id].name)}</span></td>${ch.map((c) => cell(c.seats[id] || 0)).join("")}</tr>`).join("") +
+    ids.map((id) => `<tr><td><span class="pn" style="--c:${byId[id].color}"><i></i>${blocTag(byId[id])}${esc(byId[id].name)}</span></td>${ch.map((c) => cell(c.seats[id] || 0)).join("")}</tr>`).join("") +
     [["gov", "Hükümet bloğu"], ["opp", "Muhalefet (Arap partileri hariç)"], ["arab", "Arap partileri"]].map(([b, label]) =>
       `<tr class="bloc"><td>${label}</td>${ch.map((c) => { const n = blocSum(c, b); return cell(n, b === "gov" && n >= 61 ? "maj" : ""); }).join("")}</tr>`).join("") +
     `</tbody>`;
@@ -1288,7 +1298,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "bcab841de8";
+const BUILD = "8845727067";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

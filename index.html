@@ -792,8 +792,12 @@ function nationalAgg(n) {
 
 function renderSummary() {
   const all = S.national ? nationalAgg(S.national) : agg(S.states.flatMap((s) => s.cities));
-  const { seats, pass, thr } = allocate(all.votes);
-  const order = P.map((_, i) => i).sort((a, b) => all.votes[b] - all.votes[a]);
+  // Kısmi sayımda yalnızca birkaç listenin oranı biliniyorsa sandalye hesaplanmaz
+  const noSeats = !!(S.national && S.national.noSeats);
+  let { seats, pass, thr } = allocate(all.votes);
+  if (noSeats) { seats = seats.map(() => 0); pass = pass.map(() => true); }
+  // "Diğer listeler" her zaman en altta
+  const order = P.map((_, i) => i).sort((a, b) => (P[a].id === "others") - (P[b].id === "others") || all.votes[b] - all.votes[a]);
   $("nat-stack").innerHTML = order.map((i) => `<span style="width:${all.share[i] * 100}%;background:${P[i].color}"></span>`).join("");
   // Çubuk ölçeği: en yüksek oy oranı (en az %20), baraj çizgisi aynı ölçekte
   const scale = Math.max(.2, ...all.share);
@@ -805,14 +809,14 @@ function renderSummary() {
       <span class="pb"><span style="width:${all.share[i] / scale * 100}%"></span><b style="left:${THRESHOLD / scale * 100}%"></b></span>
       <span class="pc num">${all.valid ? pct(all.share[i]) : "—"}</span>
       <span class="vt">${all.valid ? fmt(all.votes[i]) : "—"}</span>
-      <span class="st num">${!all.valid ? "—" : !pass[i] ? "eşik altı" : seats[i]}</span>
+      <span class="st num">${!all.valid || noSeats ? "—" : !pass[i] ? "eşik altı" : seats[i]}</span>
     </div>`).join("") +
     (all.valid ? "" : `<p class="empty-note">Henüz sayılmış oy yok. Merkez Seçim Kurulu ilk sandık sonuçlarını açıkladığında listelerin oy oranları ve sandalyeleri burada, en çok oy alandan aza doğru sıralanacak.</p>`);
   if (S.totalBoxes && mode !== "sim" && !(S.national && !all.opened)) all.progress = all.opened / S.totalBoxes, all.boxes = S.totalBoxes;
 
   const gov = P.reduce((a, p, i) => a + (p.bloc === "gov" ? seats[i] : 0), 0);
   $("seat-note").textContent = all.valid && P.some((p) => p.bloc === "gov") ? (gov >= 61 ? "Mevcut sayıma göre hükümet bloğu 61'e ulaşıyor." : `Mevcut sayıma göre hükümet bloğu 61'e ${61 - gov} sandalye uzak.`) : "";
-  renderHemi(seats, all.valid > 0, all.share);
+  renderHemi(seats, all.valid > 0 && !noSeats, all.share);
 
   $("st-boxes-pct").textContent = all.progress === null ? "—" : pct(all.progress);
   $("st-boxes").textContent = all.boxes ? `${fmt(all.opened)} / ${fmt(all.boxes)}` : `${fmt(all.opened)} sandık sayıldı`;
@@ -1223,7 +1227,7 @@ async function loadLive() {
     P = Object.keys(LIVE.national.votes).map((h, i) => {
       const known = byId[letters[h]];
       if (known) return { ...known, letter: h };
-      if (h === "אחר") return { ...byId.others, letter: h };
+      if (h === "אחר") return { ...byId.others, letter: h, name: LIVE.national.otherLabel || byId.others.name };
       return { id: "x-" + h, name: "Liste " + h, ab: h, color: ["#5E7FA8", "#A86E5E", "#5EA88C", "#9C5EA8"][i % 4], bloc: "unmapped", letter: h };
     });
     S.states.forEach((s) => s.cities.forEach((c) => (c.votes = P.map(() => 0))));
@@ -1232,7 +1236,7 @@ async function loadLive() {
   }
 }
 
-const BUILD = "298cf0218f";
+const BUILD = "d9c219e782";
 // Bağımsız sitede veri, yayını daha güvenilir olan yedek adresten okunur (sayfa kodu ana adreste kalır)
 const DATA_BASE = "https://erdemnope-hash.github.io/ulmocus-secim/";
 let LIVE = null, wantSim = false;

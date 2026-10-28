@@ -1,8 +1,8 @@
 {
-  "updatedAt": "02:16",
+  "updatedAt": "02:47",
   "phase": "counting",
-  "statusText": "Sayım sürüyor · ilk sandıklar (%1) açıklandı",
-  "note": "<b>İlk resmi sayım (kısmi):</b> Merkez Seçim Kurulu 12.018 sandıktan 128'ini (yaklaşık %1, 29.379 oy) açıkladı. Bu sandıklarda Likud %26,44, Yashar %18,80, Birlikte (Bennett) %8,74 oy aldı. Sandıklar rastgele sırayla sayılmadığı için bu oranlar ülke geneli sonucu göstermez; sandalye hesabı sayım ilerleyince yapılacak. Kesin katılım: %77,7 (5.695.682 seçmen). Kaynak: i24NEWS, Kipa, Ynet.",
+  "statusText": "Gerçek sayım · 302 sandık (%2,5) sayıldı",
+  "note": "<b>Kısmi gerçek sayım:</b> Merkez Seçim Kurulu 12.018 sandıktan 302'sini (%2,5; 94.098 oy) açıkladı. Kurul ve haberler şu an yalnızca ilk üç listenin oranını veriyor: Likud %26,61, Yashar %17,09, Birlikte (Bennett) %8,93; kalan oylar \"diğer listeler\" satırında toplu gösteriliyor. Sandıklar rastgele sayılmadığı için bu oranlar sayım ilerledikçe değişebilir; sandalye hesabı tüm listelerin oyları gelince yapılacak. Kesin katılım: %77,7. Kaynak: i24NEWS, Ynet.",
   "totalBoxes": 12018,
   "letters": {
     "מחל": "likud",
@@ -19,7 +19,17 @@
     "די": "reserv",
     "ך": "amcha"
   },
-  "national": null,
+  "national": {
+    "votes": {
+      "מחל": 25039,
+      "דרך": 16081,
+      "רק": 8403,
+      "אחר": 44575
+    },
+    "countedBoxes": 302,
+    "noSeats": true,
+    "otherLabel": "Diğer tüm listeler (ayrı oranları henüz açıklanmadı)"
+  },
   "exitPolls": {
     "source": "Kanalların 22:00 çıkış anketleri (מדגמים), Haaretz canlı yayını üzerinden; Kanal 12 ve 13 Times of Israel ile doğrulandı",
     "channels": [
@@ -345,5 +355,5 @@
       "url": "https://www.israelnationalnews.com/news/435215"
     }
   ],
-  "build": "298cf0218f"
+  "build": "d9c219e782"
 }
